@@ -49,10 +49,17 @@ class SmppTransmitter
      *
      * @return string|void`
      */
-    public function send($to, $message)
+    public function send($to, $message, $from = null)
     {
         $message = GsmEncoder::utf8_to_gsm0338($message);
-        $from = new SmppAddress($this->signature, SMPP::TON_ALPHANUMERIC);
+        if ($from === null)
+        {
+            $from = new SmppAddress($this->signature, SMPP::TON_ALPHANUMERIC);
+        }
+        else
+        {
+            $from = new SmppAddress($from, SMPP::TON_ALPHANUMERIC);
+        }
         $to = new SmppAddress(intval($to), SMPP::TON_INTERNATIONAL, SMPP::NPI_E164);
 
         $this->openSmppConnection();
